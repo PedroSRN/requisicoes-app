@@ -1,1 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
+.bg-color {
+  background-color: #dbdbdb !important;
+}
+
+.bg-light {
+  background-color: rgba(207, 207, 207, 0.938) !important;
+}
+
+.links{
+  font-size: 17px;
+}
+
+.nav-link:hover {
+  color: #BB2D3B !important
+}
