@@ -3,7 +3,7 @@
     <!-- Conteudo Principal -->
     <div class="col-12 col-md col-lg mx-auto">
       <div class="text-center text-md-start">
-        <h1 class="fw-bold text-danger">Departamentos</h1>
+        <h1 class="fw-bold text-danger">Equipamentos</h1>
       </div>
 
       <div class="d-grid gap-2 d-md-block mt-4">
@@ -11,73 +11,95 @@
         (click)="gravar(modal)"
         type="button"
         class="btn btn-danger me-md-1 col-md-2">
-        <i class="pi pi-user-plus me-2"></i>Novo
+        <i class="pi pi-tag me-2"></i>Novo
         </button>
         <a
-          role="button"
-          class="btn btn-outline-danger col-md-2"
-            routerLink="/painel">
-          <i class="pi pi-sign-out me-2"></i>Voltar
-      </a>
+        role="button"
+        class="btn btn-outline-danger col-md-2"
+          routerLink="/painel">
+        <i class="pi pi-sign-out me-2"></i>Voltar
+        </a>
       </div>
       <div class="mt-4">
         <table class="table table-light table-striped table-hover">
           <thead class="thead-dark text-center">
             <tr>
-              <th>Nome</th>
-              <th>Telefone</th>
+              <th>N° de Série</th>
+              <th>Nome do Equipamento</th>
+              <th>Preço de Aquisição</th>
+              <th>Data de Fabricação</th>
               <th>Ações</th>
             </tr>
           </thead>
           <tbody class="text-center">
-            <tr *ngFor="let departamento of (departamentos$ | async)">
-              <td>{{ departamento.nome }}</td>
-              <td>{{ departamento.telefone }}</td>
+            <tr *ngFor="let equipamento of (equipamentos$ | async)">
+              <td>{{ equipamento.id }}</td>
+              <td>{{ equipamento.nome }}</td>
+              <td>{{ equipamento.preco }}</td>
+              <td>{{ equipamento.dataFabricacao | date:'dd/MM/yyyy'}}</td>
               <td class="d-grid d-md-block">
                 <button
-                (click)="gravar(modal, departamento)"
+                (click)="gravar(modal, equipamento)"
                 type="button"
                 class="btn btn-warning me-0 me-md-1 mb-1 mb-md-auto">
                 <i class="pi pi-user-edit"></i>
-              </button>
-              <button
-              (click)="excluir(departamento)"
+                </button>
+                <button
+                (click)="excluir(equipamento)"
                 type="button"
                 class="btn btn-outline-danger">
                 <i class="pi pi-trash"></i>
-              </button>
+                </button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-
   </div>
 </div>
 
 <ng-template #modal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">{{ tituloModal }} de Departamento</h4>
+    <h4 class="modal-title" id="modal-basic-title">{{ tituloModal }} de Equipamentos</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('fechar')"></button>
   </div>
   <form [formGroup]="form" (ngSubmit)="modal.close('gravar')">
     <div class="modal-body">
         <div class="form-group mb-3">
-          <label for="nome" class="form-label">Nome do Departamento</label>
-          <input formControlName="nome"
+          <label for="nome" class="form-label">Nº de Série</label>
+          <input formControlName="id"
           class="form-control"
           type="text"
-          placeholder="Digite o nome do seu departamento">
+          placeholder="">
+
         </div>
 
         <div class="form-group mb-3">
-          <label for="telefone" class="form-label">Telefone</label>
-          <input formControlName="telefone"
-          mask="(00) 0000-0000||(00) 0 0000-0000"
+          <label for="telefone" class="form-label">Nome:</label>
+          <input formControlName="nome"
           class="form-control"
           type="text"
-          placeholder="Digite o número de telefone do departamento">
+          placeholder="Digite o nome do Equipamento">
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="telefone" class="form-label">Preço de Aquisição:</label>
+          <input formControlName="preco"
+          mask="separator.2"
+            prefix="R$ "
+            thousandSeparator=","
+            decimalMarker="."
+          class="form-control"
+          type="text"
+          placeholder="Digite o preço do Equipamento">
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="telefone" class="form-label">Data de Fabricação:</label>
+          <input formControlName="dataFabricacao"
+          class="form-control"
+          type="date">
         </div>
 
     </div>
@@ -88,4 +110,3 @@
         </div>
   </form>
 </ng-template>
-

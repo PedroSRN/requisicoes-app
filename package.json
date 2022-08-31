@@ -24,6 +24,7 @@
     "@popperjs/core": "^2.10.2",
     "bootstrap": "^5.1.3",
     "firebase": "^9.9.3",
+    "ngx-mask": "^13.1.15",
     "primeicons": "^5.0.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
