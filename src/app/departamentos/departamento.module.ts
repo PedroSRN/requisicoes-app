@@ -8,6 +8,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxMaskModule } from 'ngx-mask';
 
 
+
 @NgModule({
   declarations: [
     DepartamentoComponent

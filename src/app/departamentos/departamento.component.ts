@@ -1,6 +1,7 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Toast, ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { Departamento } from './models/departamento.model';
 import { DepartamentoService } from './services/departamento.service';
@@ -16,7 +17,8 @@ export class DepartamentoComponent implements OnInit {
   constructor(
     private departamentoService: DepartamentoService,
     private modalService: NgbModal,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private toastrService: ToastrService
     ) { }
 
   ngOnInit(): void {
@@ -24,8 +26,8 @@ export class DepartamentoComponent implements OnInit {
 
     this.form = this.fb.group({
       id: new FormControl(""),
-      nome: new FormControl(""),
-      telefone: new FormControl("")
+      nome: new FormControl("",[Validators.required, Validators.minLength(3)]),
+      telefone: new FormControl("",[Validators.required, Validators.minLength(10)])
     })
   }
 
@@ -54,20 +56,31 @@ export class DepartamentoComponent implements OnInit {
     try{
       await this.modalService.open(modal).result;
 
-      if(!departamento)
+      if(!departamento){
         await this.departamentoService.inserir(this.form.value);
-      else
+        this.toastrService.success(`O departamento foi salvo com sucesso`, "Cadastro de Departamentos");
+      }
+      else{
         await this.departamentoService.editar(this.form.value)
+        this.toastrService.success(`O departamento foi alterado com sucesso`, "Atualização de Departamentos");
+      }
 
-      console.log(`O departamento foi salvo com sucesso`);
 
-    } catch(_error){
+    } catch(error){
+      if(error != "fechar" && error != "0" && error != "1")
+      this.toastrService.error("Houve um erro ao salvar o departamento. Tente novamente.", "Cadastro de Departamentos")
     }
 
   }
 
   public excluir(departamento: Departamento){
+    try{
     this.departamentoService.excluir(departamento);
+
+    this.toastrService.success(`O departamento foi excluído com sucesso`, "Exclusão de Departamentos");
+    }catch (error){
+      this.toastrService.error("Houve um erro ao salvar o departamento. Tente novamente.", "Exclusão de Departamentos")
+    }
   }
 
 }

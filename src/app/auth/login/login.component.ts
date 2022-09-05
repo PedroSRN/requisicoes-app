@@ -2,6 +2,7 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormGroupName, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Toast, ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
@@ -17,13 +18,14 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authService: AuthenticationService,
     private router: Router,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private toastrService: ToastrService
     ) { }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      email: new FormControl(""),
-      senha: new FormControl("")
+      email: new FormControl("", [Validators.email, Validators.required]),
+      senha: new FormControl("", [Validators.required])
     });
 
     this.formRecuperacao = this.formBuilder.group({
@@ -51,9 +53,11 @@ export class LoginComponent implements OnInit {
 
       if(resposta?.user){
         this.router.navigate(["/painel"])
+        this.toastrService.success("Bem Vindo ao Sistema de Requisições", "Sistema de Requisições")
       }
     } catch (error) {
       console.log(error);
+      this.toastrService.error("Houve um erro ao Logar em sua conta. Tente novamente.", "Sistema de Requisições")
     }
   }
 

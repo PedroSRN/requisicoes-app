@@ -7,28 +7,37 @@
 
           <form class="col-md-8 mx-auto" [formGroup]="form" (ngSubmit)="login()">
 
-            <div class="form-group mt-5">
+            <div class="form-group mt-5 position-relative">
               <label for="email" class="form-label fs-5 p-2">Email</label>
               <input
+              [ngClass]="(email?.touched && email?.invalid) ? 'is-invalid' : ''"
                formControlName="email"
                class="form-control"
                type="email"
                placeholder="Digite seu endereço de email">
+               <div class="invalid-tooltip" *ngIf="email?.touched && email?.invalid">
+                <span *ngIf="email?.errors?.['required']">O email precisa ser informado.</span>
+                <span *ngIf="email?.errors?.['email']">O email precisa ser informado em um formato válido.</span>
+               </div>
             </div>
 
-            <div class="form-group my-5">
+            <div class="form-group my-5 position-relative">
               <label for="senha" class="form-label fs-5 p-2">Senha</label>
               <input
+              [ngClass]="(senha?.touched && senha?.invalid) ? 'is-invalid' : ''"
                formControlName="senha"
                class="form-control"
                type="password"
                placeholder="Digite sua senha">
+               <div class="invalid-tooltip" *ngIf="senha?.touched && senha?.invalid">
+                <span *ngIf="senha?.errors?.['required']">A senha precisa ser informada.</span>
+               </div>
             </div>
 
             <a role="button" class="text-primary text-decoration-none" (click)="abrirModalRecuperacao(content)">Esqueceu sua Senha?</a>
 
             <div class="d-grid mx-4 gap-2 mt-3">
-              <button type="submit" class="btn btn-danger">
+              <button type="submit" class="btn btn-danger" [disabled]="this.form.invalid">
                 <i class="pi pi-sign-in me-1"></i>Login
               </button>
             </div>

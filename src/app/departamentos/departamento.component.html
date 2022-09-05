@@ -63,28 +63,38 @@
   </div>
   <form [formGroup]="form" (ngSubmit)="modal.close('gravar')">
     <div class="modal-body">
-        <div class="form-group mb-3">
+        <div class="form-group mb-3 position-relative">
           <label for="nome" class="form-label">Nome do Departamento</label>
           <input formControlName="nome"
+          [ngClass]="(nome?.touched && nome?.invalid) ? 'is-invalid' : ''"
           class="form-control"
           type="text"
           placeholder="Digite o nome do seu departamento">
+          <div class="invalid-tooltip" *ngIf="nome?.touched && nome?.invalid">
+            <span *ngIf="nome?.errors?.['required']">O nome precisa ser preenchido.</span>
+            <span *ngIf="nome?.errors?.['minlength']">O nome deve ser maior que 3 caracteres.</span>
+          </div>
         </div>
 
-        <div class="form-group mb-3">
+        <div class="form-group mb-3 position-relative">
           <label for="telefone" class="form-label">Telefone</label>
           <input formControlName="telefone"
+          [ngClass]="(telefone?.touched && telefone?.invalid) ? 'is-invalid' : ''"
           mask="(00) 0000-0000||(00) 0 0000-0000"
           class="form-control"
           type="text"
           placeholder="Digite o número de telefone do departamento">
+          <div class="invalid-tooltip" *ngIf="telefone?.touched && telefone?.invalid">
+            <span *ngIf="telefone?.errors?.['required']">O telefone precisa ser informado.</span>
+            <span *ngIf="telefone?.errors?.['minlength']">O telefone deve ter no minimo 10 caracteres.</span>
+          </div>
         </div>
 
     </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-danger col-md-3" (click)="modal.dismiss('fechar')">
           Cancelar</button>
-        <button type="submit" class="btn btn-danger col-md-3">Gravar</button>
+        <button type="submit" class="btn btn-danger col-md-3" [disabled]="this.form.invalid">Gravar</button>
         </div>
   </form>
 </ng-template>

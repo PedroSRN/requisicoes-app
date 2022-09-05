@@ -7,7 +7,6 @@ import { Equipamento } from '../models/equipamento.model';
   providedIn: 'root'
 })
 export class EquipamentoService {
-
   registros: AngularFirestoreCollection<Equipamento>
 
   constructor(private firestore: AngularFirestore) {

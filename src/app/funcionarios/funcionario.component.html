@@ -3,7 +3,7 @@
     <!-- Conteudo Principal -->
     <div class="col-12 col-md col-lg mx-auto">
       <div class="text-center text-md-start">
-        <h1 class="fw-bold text-danger">Equipamentos</h1>
+        <h1 class="fw-bold text-danger">Funcionários</h1>
       </div>
 
       <div class="d-grid gap-2 d-md-block mt-4">
@@ -24,28 +24,28 @@
         <table class="table table-light table-striped table-hover">
           <thead class="thead-dark text-center">
             <tr>
-              <th>N° de Série</th>
               <th>Nome</th>
-              <th>Preço de Aquisição</th>
-              <th>Data de Fabricação</th>
+              <th>Email</th>
+              <th>Função</th>
+              <th>Departamento</th>
               <th>Ações</th>
             </tr>
           </thead>
           <tbody class="text-center">
-            <tr *ngFor="let equipamento of (equipamentos$ | async)">
-              <td>{{ equipamento.nroSerie }}</td>
-              <td>{{ equipamento.nome }}</td>
-              <td>{{ equipamento.preco | currency }}</td>
-              <td>{{ equipamento.dataFabricacao | date:'dd/MM/yyyy'}}</td>
+            <tr *ngFor="let funcionario of (funcionarios$ | async)">
+              <td>{{ funcionario.nome }}</td>
+              <td>{{ funcionario.email }}</td>
+              <td>{{ funcionario.funcao }}</td>
+              <td>{{ funcionario.departamento?.nome }}</td>
               <td class="d-grid d-md-block">
                 <button
-                (click)="gravar(modal, equipamento)"
+                (click)="gravar(modal, funcionario)"
                 type="button"
                 class="btn btn-warning me-0 me-md-1 mb-1 mb-md-auto">
                 <i class="pi pi-user-edit"></i>
                 </button>
                 <button
-                (click)="excluir(equipamento)"
+                (click)="excluir(funcionario)"
                 type="button"
                 class="btn btn-outline-danger">
                 <i class="pi pi-trash"></i>
@@ -61,25 +61,11 @@
 
 <ng-template #modal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">{{ tituloModal }} de Equipamentos</h4>
+    <h4 class="modal-title" id="modal-basic-title">{{ tituloModal }} de Funcionarios</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('fechar')"></button>
   </div>
   <form [formGroup]="form" (ngSubmit)="modal.close('gravar')">
     <div class="modal-body">
-
-      <div class="form-group mb-3 position-relative">
-          <label for="nroSerie" class="form-label">Nº de Série:</label>
-          <input formControlName="nroSerie"
-          [ngClass]="(nroSerie?.touched && nroSerie?.invalid) ? 'is-invalid' : ''"
-          class="form-control"
-          type="text"
-          placeholder="Digite o Número de Série do equipamento">
-          <div class="invalid-tooltip" *ngIf="nroSerie?.touched && nroSerie?.invalid">
-            <span *ngIf="nroSerie?.errors?.['required']">O número série precisa ser preenchido.</span>
-            <span *ngIf="nroSerie?.errors?.['minlength']">O número serie deve ser maior que 3 caracteres.</span>
-          </div>
-
-        </div>
 
         <div class="form-group mb-3 position-relative">
           <label for="nome" class="form-label">Nome:</label>
@@ -87,7 +73,7 @@
           [ngClass]="(nome?.touched && nome?.invalid) ? 'is-invalid' : ''"
           class="form-control"
           type="text"
-          placeholder="Digite o nome do Equipamento">
+          placeholder="Digite o nome do Funcionário">
           <div class="invalid-tooltip" *ngIf="nome?.touched && nome?.invalid">
             <span *ngIf="nome?.errors?.['required']">O nome precisa ser preenchido.</span>
             <span *ngIf="nome?.errors?.['minlength']">O nome deve ser maior que 3 caracteres.</span>
@@ -95,28 +81,50 @@
         </div>
 
         <div class="form-group mb-3 position-relative">
-          <label for="preco" class="form-label">Preço de Aquisição:</label>
-          <input formControlName="preco"
-          [ngClass]="(preco?.touched && preco?.invalid) ? 'is-invalid' : ''"
-         currencyMask [options]="{  prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+          <label for="email" class="form-label">Email:</label>
+          <input formControlName="email"
+          [ngClass]="(email?.touched && email?.invalid) ? 'is-invalid' : ''"
           class="form-control"
-          type="text"
-          placeholder="Digite o preço do Equipamento">
-          <div class="invalid-tooltip" *ngIf="preco?.touched && preco?.invalid">
-            <span *ngIf="preco?.errors?.['required']">O preço precisa ser informado.</span>
+          type="email"
+          placeholder="Digite o email do Funcionário">
+          <div class="invalid-tooltip" *ngIf="email?.touched && email?.invalid">
+            <span *ngIf="email?.errors?.['required']">O email precisa ser preenchido.</span>
+            <span *ngIf="email?.errors?.['email']">O email precisa ser informado em um formato válido.</span>
           </div>
         </div>
 
         <div class="form-group mb-3 position-relative">
-          <label for="dataFabricacao" class="form-label">Data de Fabricação:</label>
-          <input formControlName="dataFabricacao"
-          [ngClass]="(dataFabricacao?.touched && dataFabricacao?.invalid) ? 'is-invalid' : ''"
+          <label for="funcao" class="form-label">Função:</label>
+          <input formControlName="funcao"
+          [ngClass]="(funcao?.touched && funcao?.invalid)  ? 'is-invalid' : ''"
           class="form-control"
-          type="date">
-          <div class="invalid-tooltip" *ngIf="dataFabricacao?.touched && dataFabricacao?.invalid">
-            <span *ngIf="dataFabricacao?.errors?.['required']">A data fabricação precisa ser informada.</span>
+          type="text"
+          placeholder="Digite o função do Funcionário">
+          <div class="invalid-tooltip" *ngIf="funcao?.touched && funcao?.invalid">
+            <span *ngIf="funcao?.errors?.['required']">A função do funcionário precisa ser preenchida.</span>
+            <span *ngIf="funcao?.errors?.['minlength']">O nome da função deve ser maior que 3 caracteres.</span>
           </div>
         </div>
+
+        <div class="form-group mb-3 position-relative">
+          <label for="departamentoId" class="form-label">Departamento:</label>
+          <ng-select formControlName="departamentoId"
+            [ngClass]="(departamentoId?.touched && departamentoId?.invalid) ? 'is-invalid' : ''"
+            [clearable]="false"
+            [searchable]="false" >
+            <ng-option
+             *ngFor="let departamento of (departamentos$ | async)"
+             [value]="departamento.id">
+              {{ departamento.nome }}
+            </ng-option>
+          </ng-select>
+          <div class="invalid-tooltip" *ngIf="departamentoId?.touched && departamentoId?.invalid">
+            <span *ngIf="departamentoId?.errors?.['required']">O departamento precisa ser selecionado.</span>
+
+          </div>
+        </div>
+
+
 
     </div>
       <div class="modal-footer">

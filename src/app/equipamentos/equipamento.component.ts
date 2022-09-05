@@ -1,6 +1,8 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { validateEventsArray } from '@angular/fire/compat/firestore';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { Equipamento } from './models/equipamento.model';
 import { EquipamentoService } from './services/equipamento.service';
@@ -14,9 +16,10 @@ export class EquipamentoComponent implements OnInit {
  public form: FormGroup;
 
  constructor(
-  private equipamentoService: EquipamentoService,
-  private modalService: NgbModal,
-  private fb: FormBuilder
+   private fb: FormBuilder,
+   private modalService: NgbModal,
+   private equipamentoService: EquipamentoService,
+   private toastrService: ToastrService
   ) { }
 
 
@@ -25,9 +28,10 @@ export class EquipamentoComponent implements OnInit {
 
     this.form = this.fb.group({
       id: new FormControl(""),
-      nome: new FormControl(""),
-      preco: new FormControl(""),
-      dataFabricacao: new FormControl(""),
+      nroSerie: new FormControl("",[Validators.required, Validators.minLength(3)]),
+      nome: new FormControl("",[Validators.required, Validators.minLength(3)]),
+      preco: new FormControl("",[Validators.required]),
+      dataFabricacao: new FormControl("", [Validators.required]),
     })
   }
 
@@ -37,6 +41,10 @@ export class EquipamentoComponent implements OnInit {
 
   get id() {
     return this.form.get("id");
+  }
+
+  get nroSerie() {
+    return this.form.get("nroSerie");
   }
 
   get nome() {
@@ -60,17 +68,28 @@ export class EquipamentoComponent implements OnInit {
     try{
       await this.modalService.open(modal).result;
 
-      if(!equipamento)
+
+      if(!equipamento){
         await this.equipamentoService.inserir(this.form.value);
-      else
+        this.toastrService.success(`O equipamento foi salvo com sucesso`, "Cadastro de Equipamentos")
+      }
+      else{
         await this.equipamentoService.editar(this.form.value)
+        this.toastrService.success(`O equipamento foi alterado com sucesso`, "Atualização de Equipamentos");
+      }
 
-      console.log(`O equipamento foi salvo com sucesso`);
-
-    } catch(_error){
+    } catch(error){
+      if(error != "fechar" && error != "0" && error != "1")
+      this.toastrService.error("Houve um erro ao salvar o equipamento. Tente novamente.", "Cadastro de Equipamentos")
     }
   }
   public excluir(equipamento: Equipamento){
+    try{
     this.equipamentoService.excluir(equipamento);
+
+    this.toastrService.success(`O equipamento foi excluído com sucesso`, "Exclusão de Equipamentos");
+    }catch (error){
+      this.toastrService.error("Houve um erro ao salvar o equipamento. Tente novamente.", "Exclusão de Equipamentos")
+    }
   }
 }
