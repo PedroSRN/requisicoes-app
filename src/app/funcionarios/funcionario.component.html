@@ -67,6 +67,7 @@
   <form [formGroup]="form" (ngSubmit)="modal.close('gravar')">
     <div class="modal-body">
 
+      <div formGroupName="funcionario">
         <div class="form-group mb-3 position-relative">
           <label for="nome" class="form-label">Nome:</label>
           <input formControlName="nome"
@@ -106,6 +107,8 @@
           </div>
         </div>
 
+
+
         <div class="form-group mb-3 position-relative">
           <label for="departamentoId" class="form-label">Departamento:</label>
           <ng-select formControlName="departamentoId"
@@ -120,16 +123,28 @@
           </ng-select>
           <div class="invalid-tooltip" *ngIf="departamentoId?.touched && departamentoId?.invalid">
             <span *ngIf="departamentoId?.errors?.['required']">O departamento precisa ser selecionado.</span>
-
           </div>
         </div>
+      </div>
+
+      <div class="form-group mb-3 position-relative" *ngIf="!this.id?.value">
+        <label for="senha" class="form-label">Senha</label>
+        <input formControlName="senha"
+        [ngClass]="(senha?.touched && senha?.invalid) ? 'is-invalid' : ''"
+        class="form-control"
+        type="password"
+        placeholder="Digite a senha do funcionário">
+        <div class="invalid-tooltip" *ngIf="senha?.touched && senha?.invalid">
+          <span *ngIf="senha?.errors?.['required']">A senha do funcionário precisa ser preenchida.</span>
+          <span *ngIf="senha?.errors?.['minlength']">A senha deve ser maior que 5 caracteres.</span>
+        </div>
+      </div>
 
 
 
     </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-danger col-md-3" (click)="modal.dismiss('fechar')">
-          Cancelar</button>
+        <button type="button" class="btn btn-outline-danger col-md-3" (click)="modal.dismiss('fechar')">Cancelar</button>
         <button type="submit" class="btn btn-danger col-md-3" [disabled]="this.form.invalid">Gravar</button>
         </div>
   </form>

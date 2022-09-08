@@ -9,6 +9,7 @@ const routes: Routes = [
   { path: "", redirectTo: "login", pathMatch: "full" },
   { path: "login", component: LoginComponent ,canActivate: [LoginGuard] },
   { path: "painel", component: PainelComponent, canActivate: [AuthGuard] },
+
   {
     path: "departamentos",
   loadChildren: () => import("./departamentos/departamento.module")
@@ -28,6 +29,13 @@ const routes: Routes = [
   loadChildren: () => import("./funcionarios/funcionario.module")
     .then(m => m.FuncionarioModule),
   canActivate: [AuthGuard]
+  },
+
+  {
+    path: "requisicoes",
+    loadChildren: () => import("./requisicoes/requisicao.module")
+      .then(m => m.RequisicaoModule),
+    canActivate: [AuthGuard]
   },
 
 ];

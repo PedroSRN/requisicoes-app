@@ -69,6 +69,7 @@ export class DepartamentoComponent implements OnInit {
     } catch(error){
       if(error != "fechar" && error != "0" && error != "1")
       this.toastrService.error("Houve um erro ao salvar o departamento. Tente novamente.", "Cadastro de Departamentos")
+
     }
 
   }
