@@ -1,9 +1,22 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { DetalhesComponent } from './detalhes/detalhes.component';
 import { RequisicaoComponent } from './requisicao.component';
+import { RequisicoesDepartamentoComponent } from './requisicoes-departamento/requisicoes-departamento.component';
+import { RequisicoesFuncionarioComponent } from './requisicoes-funcionario/requisicoes-funcionario.component';
+import { RequisicaoResolver } from './service/requisicao.resolver';
 
 const routes: Routes = [
-  { path: "", component:RequisicaoComponent}
+  {
+    path: "",
+     component:RequisicaoComponent,
+     children: [
+        { path: "", redirectTo: "funcionario", pathMatch: "full"}, //Rota padrão de inicio da página
+        { path: "funcionario", component: RequisicoesFuncionarioComponent},
+        { path: "departamento", component: RequisicoesDepartamentoComponent}
+     ]
+    },
+    { path: ":id", component: DetalhesComponent, resolve: { requisicao: RequisicaoResolver } }
 ];
 
 @NgModule({

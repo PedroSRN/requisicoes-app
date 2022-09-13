@@ -136,7 +136,7 @@
         placeholder="Digite a senha do funcionário">
         <div class="invalid-tooltip" *ngIf="senha?.touched && senha?.invalid">
           <span *ngIf="senha?.errors?.['required']">A senha do funcionário precisa ser preenchida.</span>
-          <span *ngIf="senha?.errors?.['minlength']">A senha deve ser maior que 5 caracteres.</span>
+          <span *ngIf="senha?.errors?.['minlength']">A senha deve ser maior que 6 caracteres.</span>
         </div>
       </div>
 
