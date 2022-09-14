@@ -118,7 +118,7 @@ export class RequisicoesDepartamentoComponent implements OnInit {
     this.form.patchValue({
       funcionario: this.funcionarioLogado,
       status: this.requisicaoSelecionada?.status,
-      date: new Date(),
+      data: new Date(),
     });
   }
 }
