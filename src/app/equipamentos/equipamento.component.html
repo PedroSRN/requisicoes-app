@@ -104,6 +104,7 @@
           placeholder="Digite o preço do Equipamento">
           <div class="invalid-tooltip" *ngIf="preco?.touched && preco?.invalid">
             <span *ngIf="preco?.errors?.['required']">O preço precisa ser informado.</span>
+            <span *ngIf="preco?.errors?.['min']">O preço de aquisição deve ser maior que 0.</span>
           </div>
         </div>
 
@@ -115,6 +116,7 @@
           type="date">
           <div class="invalid-tooltip" *ngIf="dataFabricacao?.touched && dataFabricacao?.invalid">
             <span *ngIf="dataFabricacao?.errors?.['required']">A data fabricação precisa ser informada.</span>
+            <span *ngIf="dataFabricacao?.errors?.['datafutura']">A data fabricação não pode exceder hoje.</span>
           </div>
         </div>
 

@@ -1,5 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, Subscription } from 'rxjs';
@@ -22,7 +23,6 @@ export class RequisicoesDepartamentoComponent implements OnInit {
   public requisicoes$: Observable<Requisicao[]>;
   public departamentos$: Observable<Departamento[]>;
   public equipamentos$: Observable<Equipamento[]>;
-  private processoAutenticado$: Subscription
 
   public funcionarioLogado: Funcionario;
   public requisicaoSelecionada: Requisicao;
@@ -38,6 +38,7 @@ export class RequisicoesDepartamentoComponent implements OnInit {
     private toastrService: ToastrService,
     private modalService: NgbModal,
     private fb: FormBuilder,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
@@ -48,16 +49,7 @@ export class RequisicoesDepartamentoComponent implements OnInit {
       data: new FormControl(""),
     });
 
-    this.processoAutenticado$ = this.authService.usuarioLogado.subscribe(usuario => {
-      const email: string = usuario?.email!;
-
-      this.funcionarioService.selecionarFuncionarioLogado(email)
-        .subscribe(funcionario => {
-          this.funcionarioLogado = funcionario;
-          this.requisicoes$ = this.requisicaoService
-          .selecionarRequisicoesPorDepartamentoId(funcionario.departamentoId);
-        });
-    });
+    this.funcionarioLogado = this.route.snapshot.data["funcionarioLogado"]
 
     this.requisicoes$= this.requisicaoService.selecionarTodos();
     this.departamentos$ = this.departamentoService.selecionarTodos();
@@ -65,7 +57,7 @@ export class RequisicoesDepartamentoComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.processoAutenticado$.unsubscribe();
+
   }
 
   get tituloModal(): string {

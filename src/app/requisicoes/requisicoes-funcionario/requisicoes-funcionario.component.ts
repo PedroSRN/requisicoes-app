@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, Subscription } from 'rxjs';
@@ -8,6 +9,7 @@ import { Departamento } from 'src/app/departamentos/models/departamento.model';
 import { DepartamentoService } from 'src/app/departamentos/services/departamento.service';
 import { Equipamento } from 'src/app/equipamentos/models/equipamento.model';
 import { EquipamentoService } from 'src/app/equipamentos/services/equipamento.service';
+import { Funcionario } from 'src/app/funcionarios/models/funcionario.model';
 import { FuncionarioService } from 'src/app/funcionarios/service/funcionario.service';
 import { Requisicao } from '../models/requisicao.model';
 import { RequisicaoService } from '../service/requisicao.service';
@@ -20,9 +22,8 @@ export class RequisicoesFuncionarioComponent implements OnInit, OnDestroy {
   public requisicoes$: Observable<Requisicao[]>;
   public departamentos$: Observable<Departamento[]>;
   public equipamentos$: Observable<Equipamento[]>;
-  private processoAutenticado$: Subscription
 
-  public funcionarioLogadoId: string;
+  public funcionarioLogado: Funcionario;
   public form: FormGroup;
 
   constructor(
@@ -34,6 +35,7 @@ export class RequisicoesFuncionarioComponent implements OnInit, OnDestroy {
     private toastrService: ToastrService,
     private modalService: NgbModal,
     private fb: FormBuilder,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
@@ -56,23 +58,16 @@ export class RequisicoesFuncionarioComponent implements OnInit, OnDestroy {
       movimentacoes: new FormControl(""),
     });
 
-    this.processoAutenticado$ = this.authService.usuarioLogado.subscribe(usuario => {
-      const email: string = usuario?.email!;
-
-      this.funcionarioService.selecionarFuncionarioLogado(email)
-        .subscribe(funcionario => {
-          this.funcionarioLogadoId = funcionario.id;
-          this.requisicoes$ = this.requisicaoService.selecionarRequisicoesFuncinarioAtual(this.funcionarioLogadoId);
-        });
-    });
-
-    this.requisicoes$= this.requisicaoService.selecionarTodos();
     this.departamentos$ = this.departamentoService.selecionarTodos();
     this.equipamentos$ = this.equipamentoService.selecionarTodos();
+    this.requisicoes$= this.requisicaoService.selecionarTodos();
+
+    this.funcionarioLogado = this.route.snapshot.data["funcionarioLogado"]
+
   }
 
   ngOnDestroy(): void {
-    this.processoAutenticado$.unsubscribe();
+
   }
 
   get tituloModal(): string {
@@ -156,6 +151,6 @@ export class RequisicoesFuncionarioComponent implements OnInit, OnDestroy {
     this.form.get("dataAbertura")?.setValue(new Date());
     this.form.get("ultimaAtualizacao")?.setValue(new Date());
     this.form.get("equipamentoId")?.setValue(null);
-    this.form.get("funcionarioId")?.setValue(this.funcionarioLogadoId);
+    this.form.get("funcionarioId")?.setValue(this.funcionarioLogado.id);
   }
 }

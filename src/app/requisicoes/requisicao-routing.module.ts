@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { FuncionarioLogadoResolver } from '../shared/services/funcionario-logado.resolver';
 import { DetalhesComponent } from './detalhes/detalhes.component';
 import { RequisicaoComponent } from './requisicao.component';
 import { RequisicoesDepartamentoComponent } from './requisicoes-departamento/requisicoes-departamento.component';
@@ -12,8 +13,8 @@ const routes: Routes = [
      component:RequisicaoComponent,
      children: [
         { path: "", redirectTo: "funcionario", pathMatch: "full"}, //Rota padrão de inicio da página
-        { path: "funcionario", component: RequisicoesFuncionarioComponent},
-        { path: "departamento", component: RequisicoesDepartamentoComponent}
+        { path: "funcionario", component: RequisicoesFuncionarioComponent, resolve: {funcionarioLogado: FuncionarioLogadoResolver}},
+        { path: "departamento", component: RequisicoesDepartamentoComponent, resolve: {funcionarioLogado: FuncionarioLogadoResolver}}
      ]
     },
     { path: ":id", component: DetalhesComponent, resolve: { requisicao: RequisicaoResolver } }

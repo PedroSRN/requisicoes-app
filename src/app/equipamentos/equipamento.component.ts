@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
+import { dataFuturaValidator } from '../shared/validators/data-futura.validator';
 import { Equipamento } from './models/equipamento.model';
 import { EquipamentoService } from './services/equipamento.service';
 
@@ -29,8 +30,8 @@ export class EquipamentoComponent implements OnInit {
       id: new FormControl(""),
       nroSerie: new FormControl("",[Validators.required, Validators.minLength(3)]),
       nome: new FormControl("",[Validators.required, Validators.minLength(3)]),
-      preco: new FormControl("",[Validators.required]),
-      dataFabricacao: new FormControl("", [Validators.required]),
+      preco: new FormControl("",[Validators.required, Validators.min(0)]),
+      dataFabricacao: new FormControl("", [Validators.required, dataFuturaValidator()]),
     })
   }
 
